@@ -1,0 +1,115 @@
+<html>
+<a href="salaries">Salaries</a>
+<div>
+    <h1>Create deparment</h1>
+    <form action="/create-department" method="post" name="department">
+        <table>
+            <tbody>
+                <tr>
+                    <td>Name</td>
+                    <td>
+                        <input type="text" name="name" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td>
+                        <input type="submit" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+</div>
+<div>
+    <h1>Create team</h1>
+    <form action="/create-team" method="post">
+        <table>
+            <tbody>
+                <tr>
+                    <td>Name</td>
+                    <td>
+                        <input type="text" name="name" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>Depart ID</td>
+                    <td>
+                        <input type="text" name="depart_id" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>Manager ID</td>
+                    <td>
+                        <input type="text" name="manager_id" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td>
+                        <input type="submit"/>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+</div>
+
+<div>
+    <h1>Hire employee</h1>
+    <form action="/hire-employee" method="post">
+        <table>
+            <tbody>
+                <tr>
+                    <td>Name</td>
+                    <td>
+                        <input type="text" name="name" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>Surname</td>
+                    <td>
+                        <input type="text" name="sname" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>Experience (years)</td>
+                    <td>
+                        <input type="text" name="exp" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>Base salary</td>
+                    <td>
+                        <input type="text" name="salary" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>Coefficient (optional)</td>
+                    <td>
+                        <input type="text" name="coefficient" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>Position</td>
+                    <td>
+                        <input type="text" name="position" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>Team ID</td>
+                    <td>
+                        <input type="text" name="team_id" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td>
+                        <input type="submit" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+</div>
+</html>
