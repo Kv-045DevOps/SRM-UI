@@ -10,11 +10,11 @@ spec:
     app: ui
   ports:
   - protocol: TCP
-    port: 5000
+    port: 80
     targetPort: 5000
-...
+
 ---
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ui-deployment
@@ -30,7 +30,7 @@ spec:
     spec:
       containers:
       - name: ui
-        image: akubrachenko/ui-service:latest
+        image: 100.100.100.100/ui-service:latest
         ports:
         - containerPort: 5000
         env:
@@ -44,5 +44,3 @@ spec:
             configMapKeyRef:
               name: services-address
               key: VIEW_SERVICE_URL
-
-...
