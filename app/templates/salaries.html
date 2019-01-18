@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Salaries</title>
+    </head>
+    <body>
+        <ol>
+        {% for i in a %}
+        <li>{{i}}</li>
+        <ul>
+            {% for j in a[i] %}
+                </br>
+                {% for k in j %}
+            <li>{{k}} : {{j[k]}}</li>
+                {% endfor %}
+            {% endfor %}
+        </ul>
+        {% endfor %}
+        </ol>
+    </body>
+</html>
