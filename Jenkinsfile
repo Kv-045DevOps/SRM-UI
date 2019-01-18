@@ -25,7 +25,7 @@ node(label)
         stage("Git Checkout"){
             git(
                 branch: "akubrachenko",
-                url: 'https://github.com/Kv-045DevOps/SRM-UI.git'),
+                url: 'https://github.com/Kv-045DevOps/SRM-UI.git',
                 credentialsId: "${Creds}")
             sh "git rev-parse --short HEAD > .git/commit-id"
             imageTag= readFile ".git/commit-id"
