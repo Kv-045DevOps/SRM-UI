@@ -39,7 +39,7 @@ node(label)
         stage("Test code using PyLint and version build"){
 			container('python-alpine'){
 				pathTocode = pwd()
-				sh "python3 ${pathTocode}/sed-python.py"
+				sh "python3 ${pathTocode}/sed-python.py template.yml ${dockerRegistry}/ui-service ${imageTag}"
 				sh "python3 ${pathTocode}/pylint-test.py ${pathTocode}/app/app.py"
 			}
         }
