@@ -1,7 +1,6 @@
 FROM python:3.6-alpine
-MAINTAINER Artem Kubrachenko
-COPY . /app
-WORKDIR /app
+MAINTAINER Maxim Zhovanik
+WORKDIR /service/UI-SERV
+COPY . /service/UI-SERV
 RUN pip install -r requirements.txt
-ENTRYPOINT ["python"]
-CMD ["app/__init__.py"]
+CMD ["python", "/service/GET-SERV/app/__init__.py"]
