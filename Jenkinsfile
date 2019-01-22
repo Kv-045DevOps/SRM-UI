@@ -7,8 +7,7 @@ podTemplate(label: label, containers: [
 ],
 volumes: [
   hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock')
-]
-) 
+], serviceAccount: "jenkins") 
 {
 def app
 def dockerRegistry = "100.71.71.71:5000"
