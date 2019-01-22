@@ -4,4 +4,4 @@ COPY . /app
 WORKDIR /app
 RUN pip install -r requirements.txt
 ENTRYPOINT ["python"]
-CMD ["uiservice.py"]
+CMD ["app/__init__.py"]
