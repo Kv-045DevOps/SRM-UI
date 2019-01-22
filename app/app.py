@@ -1,8 +1,10 @@
-from app import app
+from flask import Flask
 import flask
-import requests
 import json
+import requests
 import os
+
+app = Flask(__name__)
 
 POST_SERVICE_URL = "http://"+str(os.getenv("POST_SERVICE_URL"))+":5001/posting"
 VIEW_SERVICE_URL = "http://"+str(os.getenv("VIEW_SERVICE_URL"))+":5003/get-one"
@@ -81,3 +83,6 @@ def create_team():
 @app.route("/hire-employee", methods=['POST'])
 def hire_employee():
 	return try_send('employee', flask.request.form)
+
+if __name__ == '__main__':
+    app.run(debug=True,host='0.0.0.0',port='5000')
