@@ -38,8 +38,9 @@ node(label)
         stage("Test code using PyLint and version build"){
 			container('python-alpine'){
 				pathTocode = pwd()
-				sh "python3 ${pathTocode}/sed-python.py template.yml ${dockerRegistry}/ui-service ${imageTag}"
-				sh "python3 ${pathTocode}/pylint-test.py ${pathTocode}/app/routes.py"
+				sh "python3 ${pathTocode}/sed_python.py template.yml ${dockerRegistry}/ui-service ${imageTag}"
+			//	sh "python3 ${pathTocode}/pylint-test.py ${pathTocode}/app/routes.py"
+			sleep 10
 			}
         }
         stage("Build docker image"){
@@ -55,12 +56,14 @@ node(label)
 			}
         }
         stage("Check push image to Docker Registry"){
+            container('python-alpine'){
             pathTocode = pwd()
-            sh "python3 ${pathTocode}/images-registry-test.py ${dockerRegistry} ${projName} ${imageTag}"
+        //    sh "python3 ${pathTocode}/images-registry-test.py ${dockerRegistry} ${projName} ${imageTag}"
+        }
         }
         stage("Deploy to Kubernetes"){
 			container('kubectl'){
-				sh "kubectl apply -f template.yaml"
+				sh "kubectl apply -f template.yml"
 				sh "kubectl get pods --namespace=production"
 			}
         }
