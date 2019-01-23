@@ -85,4 +85,4 @@ def hire_employee():
 	return try_send('employee', flask.request.form)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port="5000")
