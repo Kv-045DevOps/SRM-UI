@@ -10,6 +10,7 @@ volumes: [
 ], serviceAccount: "jenkins") 
 {
 def app
+def imageTag
 def dockerRegistry = "100.71.71.71:5000"
 def Creds = "git_cred"
 def projName = "ui-service"
@@ -26,8 +27,8 @@ node(label)
                 branch: "akubrachenko",
                 url: 'https://github.com/Kv-045DevOps/SRM-UI.git',
                 credentialsId: "${Creds}")
-            sh "git rev-parse --short HEAD > .git/commit-id"
-            imageTag= readFile ".git/commit-id"
+            //sh "git rev-parse --short HEAD > .git/commit-id"
+            imageTag = sh (script: "git rev-parse --short HEAD", returnStdout: true)
         }
         stage("Info"){
             sh "echo ${imageTag}"
