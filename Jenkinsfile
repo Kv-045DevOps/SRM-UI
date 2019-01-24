@@ -68,6 +68,19 @@ node(label)
 				sh "kubectl get pods --namespace=production"
 			}
         }
+    stage ("E2E Tests - Stage 1"){
+            container('python-alpine'){
+            sh 'echo "Here are e2e tests"'
+	    sh "python3 sed_python.py template-test.yml ${dockerRegistry}/ui-service ${imageTag}"
+	    sh 'cat template-test.yml'
+          }
+        }
+	stage ("E2E Tests - Stage 2"){
+            container('kubectl'){
+       sh 'kubectl apply -f template-test.yml'
+	   sh 'kubectl get pods -n testing'
+          }
+        }
 	stage ("Unit Tests"){
             sh 'echo "Here will be e2e tests"'
         }
