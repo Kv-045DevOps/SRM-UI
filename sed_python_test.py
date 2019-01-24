@@ -10,9 +10,8 @@ with open(sys.argv[1], 'r') as file:
     for i in range(len(arr_f)):
         tmp = arr_f[i] + ":" + sys.argv[2]
         data = data.replace(arr[i], tmp)
-    
-    print(data)
          
 
 with open(sys.argv[1], 'w') as file:
     file.write( data )
+    print(data)
