@@ -1,0 +1,48 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  namespace: testing
+  name: ui-service
+  labels:
+    app: ui
+spec:
+  selector:
+    app: ui
+  ports:
+  - protocol: TCP
+    port: 5000
+    targetPort: 5000
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: testing
+  name: ui-deployment
+spec:
+  selector:
+    matchLabels:
+      app: ui
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ui
+    spec:
+      containers:
+      - name: ui
+        image: 100.71.71.71:5000/ui-service:latest
+        ports:
+        - containerPort: 5000
+        env:
+        - name: POST_SERVICE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: services-address
+              key: POST_SERVICE_URL
+        - name: VIEW_SERVICE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: services-address
+              key: VIEW_SERVICE_URL
