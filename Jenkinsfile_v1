@@ -47,11 +47,42 @@ node(label)
         stage("Build docker image"){
 			container('docker'){
 				pathdocker = pwd()
+//            app = docker.build("${imageName}:${imageTag}")
 				sh "docker build ${pathdocker} -t ${imageN}${imageTag}"
 				sh "docker images"
+	//withCredentials([usernamePassword(credentialsId: 'docker_registry_2', passwordVariable: 'dockerPassword', usernameVariable: 'dockerUser')]) {
 				    
 				sh "docker push ${imageN}${imageTag}"
+        //}
 			}
+        }
+        stage("Check push image to Docker Registry"){
+            container('python-alpine'){
+            pathTocode = pwd()
+        //    sh "python3 ${pathTocode}/images-registry-test.py ${dockerRegistry} ${projName} ${imageTag}"
+        }
+        }
+        stage("Deploy to Kubernetes"){
+			container('kubectl'){
+				sh "kubectl apply -f template.yml"
+				sh "kubectl get pods --namespace=production"
+			}
+        }
+    stage ("E2E Tests - Stage 1"){
+            container('python-alpine'){
+            sh 'echo "Here are e2e tests"'
+	    sh "python3 sed_python.py template-test.yml ${dockerRegistry}/ui-service ${imageTag}"
+	    sh 'cat template-test.yml'
+          }
+        }
+	stage ("E2E Tests - Stage 2"){
+            container('kubectl'){
+       sh 'kubectl apply -f template-test.yml'
+	   sh 'kubectl get pods -n testing'
+          }
+        }
+	stage ("Unit Tests"){
+            sh 'echo "Here will be e2e tests"'
         }
     }
     catch(err){
