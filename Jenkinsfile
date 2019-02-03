@@ -33,7 +33,7 @@ properties([
             name: 'imageTagDB'),
         stringParam(
             defaultValue: '***', 
-            description: '', 
+            description: 'Namespace', 
             name: 'namespace')
     ])
 ])
