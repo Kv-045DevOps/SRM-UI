@@ -2,7 +2,7 @@ def label = "mypod-${UUID.randomUUID().toString()}"
 
 
 podTemplate(label: label, containers: [
-  containerTemplate(name: 'python-alpine', image: 'ghostgoose33/python-alp:v1', command: 'cat', ttyEnabled: true),
+  containerTemplate(name: 'python-alpine', image: 'ghostgoose33/python-alp:v2', command: 'cat', ttyEnabled: true),
   containerTemplate(name: 'docker', image: 'ghostgoose33/docker-in:v1', command: 'cat', ttyEnabled: true)
 ],
 volumes: [
@@ -22,19 +22,23 @@ properties([
         stringParam(
             defaultValue: "***", 
             description: '', 
-            name: 'imageTagGET'),
+            name: 'imageTagGET_'),
 	stringParam(
             defaultValue: "***", 
             description: '', 
-            name: 'imageTagUI'),
+            name: 'imageTagUI_'),
 	stringParam(
             defaultValue: "***", 
             description: '', 
-            name: 'imageTagDB'),
+            name: 'imageTagDB_'),
         stringParam(
             defaultValue: '***', 
             description: 'Name', 
-            name: 'namespace')
+            name: 'namespace'),
+	stringParam(
+            defaultValue: '', 
+            description: 'TAG', 
+            name: 'service')
     ])
 ])
 
@@ -47,13 +51,12 @@ node(label)
             git(branch: "test", url: 'https://github.com/Kv-045DevOps/SRM-UI.git', credentialsId: "${Creds}")
             imageTagUI = (sh (script: "git rev-parse --short HEAD", returnStdout: true))
             tmp = "1"
-            //imageTagGET = sh(returnStdout: true, script: "git tag -l --points-at HEAD").trim()
             pathTocodeui = pwd()
             }
         }
         stage("Test image_regisrty_check"){
             container("python-alpine"){
-                check_new = (sh (script: "python3 ${pathTocodeui}/images-registry-test.py ui-service ${imageTagUI}", returnStdout:true).trim())
+                check_new = (sh (script: "python3 /images-registry-test.py ui-service ${imageTagUI}", returnStdout:true).trim())
                 echo "${check_new}"
             }
         }
@@ -63,8 +66,7 @@ node(label)
         }
         stage("Test code using PyLint and version build"){
 			container('python-alpine'){
-				pathTocode = pwd()
-				sh "python3 ${pathTocodeui}/pylint-test.py ${pathTocodeui}/app/app.py"
+				sh "python3 /pylint-test.py ${pathTocodeui}/app/app.py"
 			}
         }
         stage("Build docker image"){
@@ -75,7 +77,10 @@ node(label)
 					sh "docker images"
                                 	sh "cat /etc/docker/daemon.json"
 					sh "docker push ${imageN}${imageTagUI}"
-					build(job: 'test_e2e', parameters: [[$class: 'StringParameterValue', name:"imageTagUI", value: "${imageTagUI}"]], wait: true)
+					build(job: 'test_e2e', parameters: [[$class: 'StringParameterValue', name:"imageTagUI_", value: "${imageTagUI}"],
+									   [$class: 'StringParameterValue', name:"imageTagDB_", value: "${params.imageTagDB_}"],
+									   [$class: 'StringParameterValue', name:"imageTagGET_", value: "${params.imageTagGET_}"],
+									   [$class: 'StringParameterValue', name:"service", value: "ui"]], wait: true)
         			} else {
             				echo "NO"
         			}
