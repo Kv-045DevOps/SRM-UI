@@ -21,7 +21,7 @@ properties([
     parameters([
 	stringParam(
             defaultValue: '', 
-            description: 'TAG_Changes', 
+            description: 'TAG', 
             name: 'service')
     ])
 ])
