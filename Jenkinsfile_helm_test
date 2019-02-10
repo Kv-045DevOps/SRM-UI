@@ -1,5 +1,4 @@
 def label = "mypod-${UUID.randomUUID().toString()}"
-def lab = "mypod-${UUID.randomUUID().toString()}"
 
 
 podTemplate(label: label, containers: [
