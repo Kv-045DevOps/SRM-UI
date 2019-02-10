@@ -1,0 +1,87 @@
+def label = "mypod-${UUID.randomUUID().toString()}"
+def lab = "mypod-${UUID.randomUUID().toString()}"
+
+
+podTemplate(label: label, containers: [
+  containerTemplate(name: 'python-alpine', image: 'ghostgoose33/python-alp:v3', command: 'cat', ttyEnabled: true),
+  containerTemplate(name: 'docker', image: 'ghostgoose33/docker-in:v1', command: 'cat', ttyEnabled: true),
+  containerTemplate(name: 'helm', image: 'ghostgoose33/kubectl_helm:v1', command: 'cat', ttyEnabled: true)
+],
+volumes: [
+  hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock')
+], serviceAccount: "jenkins")
+{podTemplate(label: 'helm-client', containers: [
+  containerTemplate(name: 'helm', image: 'ghostgoose33/kubectl_helm:v1', command: 'cat', ttyEnabled: true)
+], serviceAccount: "tiller")
+{
+
+def dockerRegistry = "100.71.71.71:5000"
+def Creds = "git_cred"
+def projName = "ui-service"
+def imageVersion = "latest"
+def imageName = "100.71.71.71:5000/ui-service:${imageVersion}"
+def imageN = '100.71.71.71:5000/ui-service:'
+
+properties([
+    parameters([
+	stringParam(
+            defaultValue: '', 
+            description: 'TAG_Change', 
+            name: 'service')
+    ])
+])
+
+
+node(label)
+{
+    try{
+        stage("Pre-Test"){
+            dir('ui'){
+            git(branch: "test", url: 'https://github.com/Kv-045DevOps/SRM-UI.git', credentialsId: "${Creds}")
+            imageTagUI = (sh (script: "git rev-parse --short HEAD", returnStdout: true))
+            tmp = "1"
+            pathTocodeui = pwd()
+            }
+        }
+        stage("Test image_regisrty_check"){
+            container("python-alpine"){
+                check_new = (sh (script: "python3 /images-registry-test.py ui-service ${imageTagUI}", returnStdout:true).trim())
+                echo "${check_new}"
+		echo "${imageTagUI}"
+            }
+        }
+        
+        stage ("Unit Tests"){
+            sh 'echo "Here will be unit testss"'
+        }
+        stage("Test code using PyLint and version build"){
+			container('python-alpine'){
+				//sh "python3 ${pathTocodeget}/sed_python.py template.yaml ${dockerRegistry}/get-service ${imageTag}"
+				sh "python3 /pylint-test.py ${pathTocodeui}/app/app.py"
+			}
+        }
+        stage("Build docker image"){
+			container('docker'){
+				pathdocker = pwd()
+                                if ("${tmp}" == "${check_new}"){
+                                	sh "docker build ${pathTocodeui} -t ${imageN}${imageTagUI}"
+                                	sh "cat /etc/docker/daemon.json"
+					sh "docker push ${imageN}${imageTagUI}"
+					sleep 10
+        			} else {
+            				echo "NO"
+        			}
+			}
+        }
+        stage ("HELM INstall"){
+            container('helm'){
+                sh "helm upgrade --install --namespace production --name ui-service ${pathTocodeui}/ui-service --set Values.deploy.version=v1 --set image.tag=${imageTagUI}"
+            }
+        }
+    }
+    catch(err){
+        currentBuild.result = 'Failure'
+    }
+}
+}
+}
