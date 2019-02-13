@@ -65,6 +65,7 @@ node(label)
 					build(job: 'GitHub/GET-SERVICES/test1', parameters: [[$class: 'StringParameterValue', name:"imageTagUI_", value: "${imageTagUI}"],
 									   [$class: 'StringParameterValue', name:"imageTagDB_", value: "${params.imageTagDB_}"],
 									   [$class: 'StringParameterValue', name:"imageTagGET_", value: "${params.imageTagGET_}"],
+									   [$class: 'StringParameterValue', name:"imageTagPOST_", value: "${params.imageTagPOST_}"]
 									   [$class: 'StringParameterValue', name:"service", value: "ui"]], wait: true)
         			} else {
             				echo "NO"
